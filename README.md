@@ -12,7 +12,7 @@
 
 ###  - Definition of "Lung Mass": A lung mass is defined as an abnormal spot or area in the lungs that are more than 3 centimeters (cm), about 1.5 inches, in size. Spots smaller than 3 cm in diameter are considered lung nodules. The most common causes of a lung mass differ from that of a lung nodule, as well as the chance that the abnormality may be cancer. [reference](https://www.verywellhealth.com/lung-mass-possible-causes-2249386)
 
-![1](images/LungCACXR.png)
+![1](./Medical diagnosis/images/LungCACXR.png)
 
 <br />
 
