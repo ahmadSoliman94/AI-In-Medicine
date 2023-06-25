@@ -12,7 +12,7 @@
 
 ###  - Definition of "Lung Mass": A lung mass is defined as an abnormal spot or area in the lungs that are more than 3 centimeters (cm), about 1.5 inches, in size. Spots smaller than 3 cm in diameter are considered lung nodules. The most common causes of a lung mass differ from that of a lung nodule, as well as the chance that the abnormality may be cancer. [reference](https://www.verywellhealth.com/lung-mass-possible-causes-2249386)
 
-![1](./Medical diagnosis/images/LungCACXR.png)
+![1](./Medical%20diagnosis/images/LungCACXR.png)
 
 <br />
 
@@ -54,7 +54,7 @@
 
 - ### __Class Imbalance Problem:__ it's common to have not an equal number of examples of non-disease and disease.
 
-![2](images/ClassImbalance.png)
+![2](./Medical%20diagnosis/images/ClassImbalance.png)
 
 <br />
 
@@ -63,9 +63,10 @@
 - ### Weighted Loss : By counting the number of each labels and modifying the loss function to weighted loss with the ratio of each label.
 
 <p float="left">
-  <img src="images/WeightedLoss1.png" width="500" /> 
-  <img src="images/WeightedLoss2.png" width="500" />
+  <img src="./Medical%20diagnosis/images/WeightedLoss1.png" width="500" /> 
+  <img src="./Medical%20diagnosis/images/WeightedLoss2.png" width="500" />
 </p>
+
 
 <br />
 
@@ -89,8 +90,9 @@
 - ### Binary Cross Entropy Loss Function is used for binary classification problems.
 
 <p float="left">
-  <img src="images/BinaryCrossEntropyLoss.png" width="500" /> 
+  <img src="./Medical%20diagnosis/images/BinaryCrossEntropyLoss.png" width="500" /> 
 </p>
+
 
 
 <br />
@@ -136,7 +138,7 @@
 - ### Create a Separate Validation Set:
 
 <p float="left">
-  <img src="./images/dataset_training_validation_test_sets.png" width="500" /> 
+  <img src="./Medical%20diagnosis/images/dataset_training_validation_test_sets.png" width="500" /> 
 </p>
 
 <br />
