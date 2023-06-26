@@ -12,7 +12,7 @@
 
 ###  - Definition of "Lung Mass": A lung mass is defined as an abnormal spot or area in the lungs that are more than 3 centimeters (cm), about 1.5 inches, in size. Spots smaller than 3 cm in diameter are considered lung nodules. The most common causes of a lung mass differ from that of a lung nodule, as well as the chance that the abnormality may be cancer. [reference](https://www.verywellhealth.com/lung-mass-possible-causes-2249386)
 
-![1](./Medical%20diagnosis/images/LungCACXR.png)
+![1](./images/LungCACXR.png)
 
 <br />
 
@@ -54,7 +54,7 @@
 
 - ### __Class Imbalance Problem:__ it's common to have not an equal number of examples of non-disease and disease.
 
-![2](./Medical%20diagnosis/images/ClassImbalance.png)
+![2](./images/ClassImbalance.png)
 
 <br />
 
@@ -63,8 +63,8 @@
 - ### Weighted Loss : By counting the number of each labels and modifying the loss function to weighted loss with the ratio of each label.
 
 <p float="left">
-  <img src="./Medical%20diagnosis/images/WeightedLoss1.png" width="500" /> 
-  <img src="./Medical%20diagnosis/images/WeightedLoss2.png" width="500" />
+  <img src="./images/WeightedLoss1.png" width="500" /> 
+  <img src="./images/WeightedLoss2.png" width="500" />
 </p>
 
 
@@ -90,7 +90,7 @@
 - ### Binary Cross Entropy Loss Function is used for binary classification problems.
 
 <p float="left">
-  <img src="./Medical%20diagnosis/images/BinaryCrossEntropyLoss.png" width="500" /> 
+  <img src="./images/BinaryCrossEntropyLoss.png" width="500" /> 
 </p>
 
 
@@ -138,7 +138,7 @@
 - ### Create a Separate Validation Set:
 
 <p float="left">
-  <img src="./Medical%20diagnosis/images/dataset_training_validation_test_sets.png" width="500" /> 
+  <img src="./images/dataset_training_validation_test_sets.png" width="500" /> 
 </p>
 
 <br />
@@ -152,3 +152,127 @@
   - ### sample to have same distribution of classes as the test set. (same sampling strategy should be used).
   - ### Remaining patients in Training set : Since test and validation set have been artificially sampled to have a large fraction of disease examples. (In the presence of imbalance data, you can still train your model!)
   - ### It's bad to have patients in both training and test sets : Overly optimistic test performace.
+
+---------------------------------------
+
+<br />
+
+## __2. Key Evaluation Metrics:__
+
+<br />
+
+
+- ### __How good is a model? :__
+
+### - __Accuracy:__
+- ### Accuracy is the most common evaluation metric for classification problems. It is defined as the number of correct predictions divided by the total number of predictions. It is a good metric when the dataset is balanced. However, it is not a good metric when the dataset is imbalanced. This is because it does not take into account the fact that the dataset is imbalanced. For example, if we have a dataset with 1000 images, and 900 of them are normal and 100 of them are abnormal, then accuracy will be 90%. This is because the model will predict normal for all the images, and it will be correct 90% of the time. However, this is not a good metric because it does not take into account the fact that the dataset is imbalanced.
+
+<p float="center">
+  <img src="./images/1.png" width="500" /> 
+  <img src="./images/2.png" width="500" />  
+</p>
+
+
+<br />
+
+### - Accuracy = Examples correctly classified / Total number of examples = ( TP + TN ) / ( TP + TN + FP + FN ).
+
+<p float="center">
+  <img src="./images/acc_sens_spec.png" width="500" /> 
+  <img src="./images/sens_spec.png" width="500" />  
+  <img src="./images/4.png" width="500" />
+</p>
+
+<br />
+
+> __NOTE:__ prevalance = P(disease) and P(disease) + P(normal) = 1
+
+<br />
+
+### - __Sensitivity__ (True Positive Rate or Recall):
+
+- ### How good the model is at correctly identifying those patients who actually have the disease and label them as having the disease.
+- ### Sensitivity = P(predict positive | actual positive).
+- ### Sensitivity = TP / ( TP + FN ) The probability of a patient having disease in a population is called the prevalance. 
+
+
+<br />
+
+### - __Specificity__ (True Negative Rate):
+### How good the model is at correctly identifying the healthy patients as not having the disease.
+- ### Specificity : P(predict negative | actual negative).
+- ### Specificity = TN / ( TN + FP )
+
+> __NOTE:__ that the terms "positive" and "negative" don't refer to the value of the condition of interest, but to its presence or absence; the condition itself could be a disease, so that "positive" might mean "diseased", while "negative" might mean "healthy".
+
+### -  Positive(+) : when predicted correct given a patient has disease.
+### - Negative(-) : when predicted correct given a patient has no disease.
+
+<br />
+
+
+### In medical diagnosis, test sensitivity is the ability of a test to correctly identify those with the disease (true positive rate), whereas test specificity is the ability of the test to correctly identify those without the disease (true negative rate).
+
+<br />
+
+<p float="center">
+  <img src="./images/5.png" width="500" />  
+  <img src="./images/6.png" width="500" />
+</p>
+
+
+<br />
+
+
+### - __Positive Predictive Value (PPV)__ :
+### How good the model is at correctly identifying those patients who actually have the disease and label them as having the disease.
+- ### PPV = P(actual positive | predict positive).
+- ### P( disease | + ).
+- ### PPV = TP / ( TP + FP ).
+- ###  Comparable to Sensitivity which is P( + | disease ).
+
+<br />
+
+<p float="center">
+  <img src="./images/7.png" width="500" />  
+</p>
+
+<br />
+
+### - __Negative Predictive Value (NPV)__ :
+### How good the model is at correctly identifying the healthy patients as not having the disease.
+- ### NPV = P(actual negative | predict negative).
+- ### P( normal | - )
+- ### TN / (TN + FN)
+- ### Comparable to Specificity which is P( - | normal )
+
+<p float="center">
+  <img src="./images/8.png" width="500" />  
+</p>
+
+<br />
+
+<p float="center">
+  <img src="./images/9.png" width="500" />  
+  <img src="./images/10.png" width="500" /> 
+</p>
+
+
+<br />
+
+### - __Confusion Matrix__ :
+
+<p float="center">
+  <img src="./images/11.png" width="500" />  
+  <img src="./images/12.png" width="500" /> 
+  <img src="./images/13.png" width="500" />  
+  <img src="./images/14.png" width="500" /> 
+</p>
+
+<br />
+
+
+<p float="center">
+  <img src="./images/15.png" width="1000" />  
+  <img src="./images/16.png" width="1000" /> 
+</p>
