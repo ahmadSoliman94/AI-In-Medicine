@@ -326,3 +326,247 @@
   <img src="./images/20.png" width="1000" />   
   <img src="./images/21.png" width="1000" /> 
 </p>
+
+<br />
+
+--------------------
+
+## ___Image Segmentation___ :
+
+### MRI: Magnetic resonance imaging (MRI) is an advanced imaging technique that is used to observe a variety of diseases and parts of the body. At a high level, MRI works by measuring the radio waves emitting by atoms subjected to a magnetic field.
+
+<p float="center">
+  <img src="./images/22.png" width="1000" />   
+</p>
+
+<br />
+
+### - The MRI scan is one of the most common image modalities that we encounter in the radiology field. Other data modalities include:
+- ### CT scans
+- ### X-rays
+- ### Ultrasound
+
+
+### - Compared to 2D image like X-rays, MRI sequence is a 3D volume.
+
+<p float="center">
+  <img src="./images/23.jpg" width="1000" />
+
+</p>
+
+
+
+- ### The Main disadavantage of processing each MRI slice independently using a 2D segmentation model is you lose some context between slices.
+
+
+<br />
+
+- ### The key idea that we will use to combine the information from different sequences is to treat them as different channels.
+  - ### Idea : RGB color channel -> Depth channel.
+  - ### You can extend this idea to stacking more channels than just 3. (But there is a memory limit).
+  - ### Challenge : Misalignment problem
+  - ### Preprocessing : image Registration is the solution to the misalignment problem.
+
+
+> __NOTE:__ most of the 3D volume data in medical setting needs preprocessing step of image registration.
+
+<p float="center">
+  <img src="./images/24.jpg" width="500" />
+
+</p>
+
+
+### **Segementation:**
+- ### Segmentation is the process of partitioning an image into multiple segments. The goal of segmentation is to simplify and/or change the representation of an image into something that is more meaningful and easier to analyze. In Other words The process of defining the boundaries of various tissues.
+- ### The task of determining the class of every point(in 2D : pixel, in 3D : voxel).
+  
+<p float="center">
+  <img src="./images/25.png" width="500" />
+
+</p>
+
+<br />
+
+
+### - 2D Approach:
+In the 2D approach, we break up the 3D MRI volume we've built into many 2D slices.
+
+
+<p float="center">
+  <img src="./images/26.png" width="500" />
+
+</p>
+
+<br />
+
+Each one of these slices is passed into a segmentation model which outputs the segmentation for that slice.
+
+<p float="center">
+  <img src="./images/27.png" width="500" />
+
+</p>
+
+<br />
+
+- ### The drawback with this 2D approach is that we might lose important 3D context when using this approach. For instance, if there is a tumor in one slice, there is likely to be a tumor in the slices right adjacent to it. Since we're passing in slices one at a time into the network, the network is not able to learn this useful context.
+
+<br />
+
+
+- ### 3D Approach:
+In the 3D approach, we pass in the entire 3D volume into the network at once. This allows the network to learn the 3D context between slices.
+
+
+### - what can we do instead to still have the model be able to get this context information in the depth dimension?
+
+- ### In the 3D approach, we break up the 3D MRI volume into many 3D subvolumes. Each of these subvolumes has some width, height, and depth context
+
+<p float="center">
+  <img src="./images/28.png" width="500" />
+
+</p>
+
+<br />
+
+- ### like in the 2D approach, we can feed in the subvolumes now one at a time into the model and then aggregate them at the end to form a segmentation map for the whole volume. 
+
+<p float="center">
+  <img src="./images/29.png" width="500" />
+
+</p>
+
+
+<br />
+
+- ### The drawback with this 3D approach is that it is computationally expensive. The 3D subvolumes are much larger than the 2D slices, so we can't fit as many of them into memory at once. This means that we have to feed in fewer subvolumes into the network at once, which means that we have to train for more epochs to see the same number of subvolumes. This makes training much slower and we might still lose important spatial context. For instance, if there is a tumor in one subvolume, there is likely to be a tumor in the subvolumes around it too. Since we're passing in subvolumes one at a time into the network, the network will not be able to learn this possibly useful context. 
+
+
+<br />
+
+- ### U-Net Architecture:
+
+<p float="center">
+  <img src = './images/30.png' width = '700'>
+  <img src="./images/31.png" width="700" />
+</p>
+
+
+<br />
+
+> Data Augmentation: when we rotate an input image by 90 degrees to produce a transformed input, we also need to rotate the output segmentations by 90 degrees to get our transformed output segmentation. The second difference is that we now have 3D volumes instead of 2D images. So, the transformations have to apply to the whole 3D volume. With this, we almost have all of the pieces necessary to train our brain tumor segmentation model. The final thing we need to look at is the loss function. In our loss function, we want to be able to specify the error. We should assign an example, given the model prediction and the ground truth.
+
+
+<br />
+
+- ### Loss Function:
+  - ### Dice Loss: is a popular loss function for segmentation models. 
+    - ### Works well in the presece of imbalanced data.
+    - ### In our task of brain tumor segmentation, a very small fraction of the brain will be tumor regions.
+
+<br />
+
+
+- ### SOFT DICE LOSS:
+  ### The soft dice loss will measure the error between our prediction map, P, and our ground truth map, G.
+
+<p float="center">
+  <img src = './images/32.png' width = '700'>
+</p> 
+
+### the red part measures the overlap between the predictions and the ground truth, and we want this fraction to be large. Here, when G over here is equal to 1, then we want P to be close to 1 so that this numerator term is large. We also want the denominator to be small. So when G equals 0, we want P to be close to 0. Otherwise, this term would be large and the denominator would be large. . Now, we take 1 minus this fraction, such that a higher loss corresponds to a small overlap and a low loss corresponds to a high overlap. 
+
+
+<br />
+
+### ___FOR EXAMPLE:___
+
+<p float="center">
+  <img src = './images/33.png' width = '700'>
+
+</p>
+
+To compute the numerator of the loss for this example, we multiply P and G element wise to get pigi. For instance, 0.9 times 1 gives us 0.9, so that's entered here. To compute the denominator, we need the sum of squares of pi and the sum of squares of gi. Similarly, we can compute these by squaring the p column to get pi squared and g column to get gi squared. We can then sum up these columns to get the sum over all of the pixels. We can plug in these values into the soft dice loss for this particular example as 1- 2 times 2.2/2.47 + 3, which is 1- 4.4/5.47. And this comes out to approximately 0.2, which is the loss with this particular prediction, and with this particular ground truth for this example. The model optimizes this loss function to get better and better segmentations. This completes all of the pieces we need to be able to train our brain tumor segmentation model. We'll look at the evaluation of the segmentation model next.
+
+
+<br />
+
+```python
+
+"""Pytorch implementation of Dice Loss"""
+def dice_coeff(pred, target):
+    smooth = 1.
+    num = pred.size(0)
+    m1 = pred.view(num, -1)  # Flatten
+    m2 = target.view(num, -1)  # Flatten
+    intersection = (m1 * m2).sum()
+
+    return (2. * intersection + smooth) / (m1.sum() + m2.sum() + smooth)
+
+
+class DiceLoss(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(SoftDiceLoss, self).__init__()
+
+    def forward(self, logits, targets):
+        probs = F.sigmoid(logits)
+        num = targets.size(0)  # Number of batches
+
+        score = dice_coeff(probs, targets)
+        score = 1 - score.sum() / num
+        return score
+
+```
+
+<br />
+
+```python
+
+"""python implementation of Soft Dice Loss"""
+def soft_dice_loss(y_true, y_pred, epsilon=1e-6): 
+    ''' 
+    Soft dice loss calculation for arbitrary batch size, number of classes, and number of spatial dimensions.
+    Assumes the `channels_last` format.
+  
+    # Arguments
+        y_true: b x X x Y( x Z...) x c One hot encoding of ground truth
+        y_pred: b x X x Y( x Z...) x c Network output, must sum to 1 over c channel (such as after softmax) 
+        epsilon: Used for numerical stability to avoid divide by zero errors
+    
+    # References
+        V-Net: Fully Convolutional Neural Networks for Volumetric Medical Image Segmentation 
+        https://arxiv.org/abs/1606.04797
+        More details on Dice loss formulation 
+        https://mediatum.ub.tum.de/doc/1395260/1395260.pdf (page 72)
+        
+        Adapted from https://github.com/Lasagne/Recipes/issues/99#issuecomment-347775022
+    '''
+    
+    # skip the batch and class axis for calculating Dice score
+    axes = tuple(range(1, len(y_pred.shape)-1)) 
+    numerator = 2. * np.sum(y_pred * y_true, axes)
+    denominator = np.sum(np.square(y_pred) + np.square(y_true), axes)
+    
+    return 1 - np.mean(numerator / (denominator + epsilon)) # average over classes and batch
+
+```
+
+<br />
+
+
+- ### External Validation:
+  - ### To be able to measure the generalization of a model on a population that it hasn't seen, we want to be able to evaluate on a test set from the new population. This is called external validation. External validation can be contrasted with internal validation, when the test set is drawn from the same distribution as the training set for the model.
+
+
+<p float="center">
+  <img src = './images/34.png' width = '700'>
+
+</p>
+
+<br />
+
+- ### If we find that we're not generalizing to the new population, then we could get a few more samples from the new population to create a small training and validation set and then fine-tune the model on this new data.
+
+<p float="center">
+  <img src = './images/35.png' width = '700'>
+
+</p>
